@@ -1,4 +1,3 @@
-console.log('Hola, API clima')
 
 async function fetchWeatherData(latitude, longitude) {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
@@ -20,12 +19,38 @@ async function handleFetchClick(){
     const longitude = document.getElementById("longitude-input").value;
     const curretTemperature = document.getElementById("temp-display");
     const currentWind = document.getElementById("wind-display");
+    const currentHumidity = document.getElementById("humidity-display");
 
     const currentWeather = await fetchWeatherData(latitude, longitude);
     curretTemperature.textContent = currentWeather.temperature;
     currentWind.textContent = currentWeather.windspeed;
-    weatherResult.classList.remove("hidden");
 
-    button.disabled = true;
-    button.innerHTML = '<span class="loading"></span>Cargando...';
+ button.disabled = true;
+    button.innerHTML = '<span class="loading"></span> Loading...';
+    
+    try {
+        const currentWeather = await fetchWeatherData(latitude, longitude);
+        
+        // Actualizar la interfaz
+        currentTemperature.textContent = Math.round(currentWeather.temperature);
+        currentWind.textContent = `${currentWeather.windspeed} km/h`;
+        
+        // Calcular "feels like" (simulación simple)
+        const feelsLikeTemp = Math.round(currentWeather.temperature - (currentWeather.windspeed * 0.1));
+        feelsLike.textContent = `${feelsLikeTemp} °C`;
+        
+        // Actualizar apariencia según temperatura
+        updateWeatherAppearance(currentWeather.temperature);
+        
+        // Mostrar resultados
+        weatherResult.classList.remove("hidden");
+        
+    }  finally {
+        button.disabled = false;
+        button.innerHTML = '<i class="fas fa-search"></i> Get Weather';
+    }
+}
+
+if (currentTemperature <= 16){
+    backgro
 }
